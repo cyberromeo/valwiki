@@ -116,6 +116,18 @@ function hideLoader() {
     if (loader) loader.classList.add('hidden');
 }
 
+function openModal(htmlContent, className = '') {
+    if (!modal || !modalContent) return;
+
+    // Reset classes
+    modalContent.className = 'modal-content';
+    if (className) modalContent.classList.add(className);
+
+    modalContent.innerHTML = htmlContent;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
 // ===== Navigation =====
 function setActiveNav(page) {
     navLinks.forEach(link => {
@@ -386,11 +398,26 @@ function renderMapsPage(maps) {
 
 // CARDS (Collection)
 function renderPlayerCard(card) {
+    // Improved Grid Item: Square Icon only
     return `
-        <div class="card">
-            <img src="${card.largeArt}" alt="${card.displayName}">
-                <h3>${card.displayName}</h3>
+        <div class="card card-icon" data-uuid="${card.uuid}" style="padding: 0; border: none; background: transparent; cursor: pointer;">
+            <img src="${card.displayIcon}" alt="${card.displayName}" style="width: 100%; aspect-ratio: 1/1; object-fit: cover; margin: 0; border-radius: 4px; border: 1px solid var(--ui-gray-200);">
+        </div>
+    `;
+}
+
+function renderCardDetail(card) {
+    // Modal Content for Card
+    return `
+        <div class="modal-detail" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+            <div class="detail-img" style="max-width: 400px; width: 100%;">
+                <img src="${card.largeArt}" alt="${card.displayName}" style="width: 100%; height: auto; border: 2px solid var(--ui-white); box-shadow: 0 0 30px rgba(215, 25, 32, 0.5);">
             </div>
+            <div class="detail-info" style="margin-top: 2rem; text-align: center; max-width: 600px;">
+                <h2 style="font-size: 2.5rem; color: var(--ui-white); margin-bottom: 0.5rem;">${card.displayName}</h2>
+                <div class="role-badge">PLAYER CARD</div>
+            </div>
+        </div>
     `;
 }
 
@@ -400,12 +427,27 @@ function renderCardsPage(cards) {
             <div class="page-header">
                 <h1>PLAYER CARDS</h1>
             </div>
-            <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
-                ${cards.slice(0, 200).map(card => renderPlayerCard(card)).join('')} 
-                <!-- Limit to 200 for performance -->
+            <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.5rem;">
+                ${cards.slice(0, 300).map(card => renderPlayerCard(card)).join('')}  
+            </div>
+            <div style="text-align: center; margin-top: 2rem; color: var(--ui-gray-500); font-family: var(--font-dot);">
+                SHOWING 300 / ${cards.length} CARDS
             </div>
         </div>
         `;
+}
+
+function attachCardClick(cards) {
+    const cardElements = document.querySelectorAll('.card-icon');
+    cardElements.forEach(el => {
+        el.addEventListener('click', () => {
+            const uuid = el.dataset.uuid;
+            const card = cards.find(c => c.uuid === uuid);
+            if (card) {
+                openModal(renderCardDetail(card));
+            }
+        });
+    });
 }
 
 // RANKS
@@ -735,6 +777,7 @@ async function navigateTo(page) {
             case 'cards':
                 const cards = await getPlayerCards();
                 app.innerHTML = renderCardsPage(cards);
+                attachCardClick(cards);
                 break;
             case 'ranks':
                 const ranks = await getRanks();
@@ -826,9 +869,7 @@ function attachWeaponClick(weapons) {
             const uuid = card.dataset.uuid;
             const weapon = weapons.find(w => w.uuid === uuid);
             if (weapon) {
-                modalContent.innerHTML = renderWeaponDetail(weapon);
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
+                openModal(renderWeaponDetail(weapon));
             }
         });
     });
@@ -842,11 +883,7 @@ function attachMapClick(maps) {
             const uuid = card.dataset.uuid;
             const map = maps.find(m => m.uuid === uuid);
             if (map) {
-                const content = document.querySelector('.modal-content');
-                content.classList.add('map-modal');
-                modalContent.innerHTML = renderMapDetail(map);
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
+                openModal(renderMapDetail(map), 'map-modal');
             }
         });
     });
@@ -860,11 +897,7 @@ function attachAgentClick(agents) {
             const uuid = card.dataset.uuid;
             const agent = agents.find(a => a.uuid === uuid);
             if (agent) {
-                // Remove map modal class if present (cleanup)
-                document.querySelector('.modal-content').classList.remove('map-modal');
-                modalContent.innerHTML = renderAgentDetail(agent);
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
+                openModal(renderAgentDetail(agent));
             }
         });
     });
