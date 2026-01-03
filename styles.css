@@ -752,9 +752,10 @@ h6 {
     }
 
     .jett-image {
-        height: 55vh;
+        height: 90vh;
+        /* Taller than container */
         width: auto;
-        transform: none;
+        transform: scale(1.2);
     }
 
     /* Fix Map Modal on Mobile */
