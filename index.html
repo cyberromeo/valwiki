@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VALORANT (RETRO)</title>
+    <meta name="description" content="Retro analog inspired Valorant Wiki.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Doto:wght@300;400;700;800;900&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Abstract Background Overlay -->
+    <div class="bg-overlay">
+        <!-- Retro UI usually relies on CSS gradients or SVGs in styles, overlay div kept for compatibility -->
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo active" data-page="home">
+                <!-- Simple dot logo or text -->
+                <span class="logo-text">VALORANT</span>
+                <span class="logo-text" style="color: var(--ui-red); margin-left: 5px;">WIKI</span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
+                <li><a href="#" class="nav-link" data-page="agents">Agents</a></li>
+                <li><a href="#" class="nav-link" data-page="weapons">WEAPONS</a></li>
+                <li><a href="#" class="nav-link" data-page="maps">Maps</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-link" data-page="collection">Collection ▾</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="nav-link" data-page="cards">Cards</a></li>
+                        <li><a href="#" class="nav-link" data-page="buddies">Buddies</a></li>
+                        <li><a href="#" class="nav-link" data-page="sprays">Sprays</a></li>
+                        <li><a href="#" class="nav-link" data-page="titles">Titles</a></li>
+                        <li><a href="#" class="nav-link" data-page="currency">Currency</a></li>
+                        <li><a href="#" class="nav-link" data-page="seasons">Seasons</a></li>
+                        <li><a href="#" class="nav-link" data-page="ranks">Ranks</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <button class="mobile-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app">
+        <!-- Dynamic content injected here -->
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loader-overlay hidden" id="loader">
+        <div class="loader">
+            <div class="loader-ring"></div>
+            <!-- <span class="loader-text">LOADING</span> -->
+        </div>
+    </div>
+
+    <!-- Universal Modal -->
+    <div class="modal" id="agent-modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div id="agent-detail-content"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container"
+            style="text-align: center; opacity: 0.5; font-size: 0.8rem; margin-top: 4rem; font-family: var(--font-dot);">
+            <p>VALORANT WIKI // APP BY SRIHARI</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
