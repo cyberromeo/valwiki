@@ -409,13 +409,13 @@ function renderPlayerCard(card) {
 function renderCardDetail(card) {
     // Modal Content for Card
     return `
-        <div class="modal-detail" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
-            <div class="detail-img" style="max-width: 400px; width: 100%;">
-                <img src="${card.largeArt}" alt="${card.displayName}" style="width: 100%; height: auto; border: 2px solid var(--ui-white); box-shadow: 0 0 30px rgba(215, 25, 32, 0.5);">
-            </div>
-            <div class="detail-info" style="margin-top: 2rem; text-align: center; max-width: 600px;">
-                <h2 style="font-size: 2.5rem; color: var(--ui-white); margin-bottom: 0.5rem;">${card.displayName}</h2>
+        <div class="modal-detail card-detail-view">
+            <div class="detail-info" style="text-align: left; width: 100%;">
+                <h2 style="font-size: 4rem; color: var(--ui-white); margin-bottom: 0.5rem;">${card.displayName}</h2>
                 <div class="role-badge">PLAYER CARD</div>
+            </div>
+            <div class="detail-img" style="width: 100%;">
+                <img src="${card.largeArt}" alt="${card.displayName}" style="width: 100%; height: auto; border: 2px solid var(--ui-white); box-shadow: 0 0 30px rgba(215, 25, 32, 0.5);">
             </div>
         </div>
     `;
