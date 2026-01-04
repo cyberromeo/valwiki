@@ -766,3 +766,20 @@ h6 {
         max-height: none;
     }
 }
+/* Card Detail View Specifics */
+.card-detail-view {
+    /* Ensure grid layout is active (inherited from modal-detail but enforced just in case) */
+    display: grid;
+    /* Default Mobile: 1 Column */
+    grid-template-columns: 1fr;
+    align-items: center; /* Center vertically */
+}
+
+@media(min-width: 768px) {
+    .card-detail-view {
+        /* Desktop: 2 Columns */
+        grid-template-columns: 1fr 1fr;
+        /* Ensure Title (1st child) is Left, Image (2nd child) is Right */
+        /* This is the default order, so no specific order property needed if HTML is Title then Image */
+    }
+}
