@@ -286,43 +286,125 @@ h6 {
     margin-bottom: var(--space-xl);
 }
 
-.hero-bg-text {
-    font-family: var(--font-dot);
-    font-size: 18vw;
-    /* Dramatically larger */
-    color: var(--ui-gray-100);
+/* Game Container */
+.game-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    overflow: hidden;
+}
+
+canvas#game-canvas {
+    image-rendering: pixelated;
+    width: 100%;
+    height: 100%;
+    max-width: 800px;
+    /* Constrain max game width */
+    max-height: 600px;
+    object-fit: contain;
+    z-index: 5;
+    background: #000000;
+    border: 2px solid var(--ui-gray-200);
+    box-shadow: 0 0 20px rgba(215, 25, 32, 0.1);
+}
+
+/* Game UI Overlay */
+.game-overlay {
     position: absolute;
-    z-index: 0;
-    white-space: nowrap;
-    opacity: 0.3;
     top: 50%;
-    transform: translateY(-50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.85);
+    padding: var(--space-lg);
+    border: 1px solid var(--ui-red);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    min-width: 300px;
+}
+
+.game-overlay.hidden {
+    display: none;
+}
+
+.game-title {
+    font-family: var(--font-dot);
+    font-size: 2rem;
+    color: var(--ui-white);
+    margin-bottom: var(--space-sm);
+    text-shadow: 0 0 10px var(--ui-red);
+}
+
+.game-score-label {
+    font-family: var(--font-dot);
+    color: var(--ui-gray-500);
+    font-size: 1rem;
+}
+
+.game-start-btn {
+    background: var(--ui-red);
+    color: var(--ui-white);
+    border: none;
+    padding: var(--space-md) var(--space-lg);
+    font-family: var(--font-dot);
+    font-size: 1.2rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    animation: pulse 2s infinite;
+}
+
+.game-start-btn:hover {
+    background: var(--ui-white);
+    color: var(--ui-black);
+    animation: none;
+}
+
+/* In-Game HUD */
+.game-hud {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 800px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 8;
     pointer-events: none;
 }
 
-.jett-container {
-    z-index: 1;
-    position: absolute;
-    bottom: 0;
-    right: 5%;
-    height: 90%;
-    /* Occupy most of the height */
-    width: auto;
-    display: flex;
-    align-items: flex-end;
+.hud-item {
+    font-family: var(--font-dot);
+    color: var(--ui-white);
+    font-size: 1.2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
-.jett-image {
-    height: 100%;
-    width: auto;
-    object-fit: contain;
-    filter: grayscale(100%) contrast(1.2);
-    transition: filter 0.5s ease, transform 0.5s ease;
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
-.jett-image:hover {
-    filter: grayscale(0%) contrast(1.1);
-    transform: scale(1.02);
+/* Hide original Jett elements if any remain */
+.jett-container,
+.hero-bg-text {
+    display: none;
 }
 
 /* Featured Section */
@@ -864,6 +946,47 @@ h6 {
         width: 95vw;
         height: 80vh;
         max-height: none;
+    }
+
+    /* Game Container Mobile Fixes */
+    .game-container {
+        height: 60vh;
+        /* Reduce height on mobile */
+        width: 100%;
+        max-height: none;
+    }
+
+    canvas#game-canvas {
+        max-height: 100%;
+        object-fit: contain;
+        background: #000000;
+    }
+
+    .game-overlay {
+        width: 90%;
+        min-width: unset;
+        padding: var(--space-md);
+    }
+
+    .game-title {
+        font-size: 1.5rem;
+    }
+
+    .game-hud {
+        top: 10px;
+        width: 95%;
+    }
+
+    .hud-item {
+        font-size: 1rem;
+    }
+
+    /* Landing Hero Adjustments */
+    .landing-hero {
+        height: auto;
+        min-height: 70vh;
+        padding-top: var(--space-xl);
+        justify-content: center;
     }
 }
 

@@ -144,24 +144,419 @@ function setActiveNav(page) {
 // ===== Render Functions =====
 
 // HOME
+// ===== RETRO// GAME ENGINE - SHOOT THE BLIND (AIM TRAINER)
+const RetroGame = {
+    canvas: null,
+    ctx: null,
+    width: 320, // Higher res for pixel art
+    height: 180,
+    scale: 1,
+    running: false,
+    score: 0,
+    highScore: window.localStorage.getItem('val_retro_highscore') || 0,
+
+    // Assets (Code Only)
+    sprites: {
+        eye: [
+            [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 1, 1, 0, 0],
+            [0, 1, 2, 2, 3, 3, 3, 3, 3, 3, 2, 2, 1, 0],
+            [1, 2, 2, 3, 3, 4, 4, 4, 4, 3, 3, 2, 2, 1],
+            [1, 2, 3, 3, 4, 0, 0, 0, 0, 4, 3, 3, 2, 1],
+            [1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 4, 3, 2, 1],
+            [1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 4, 3, 2, 1],
+            [1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 4, 3, 2, 1],
+            [1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 4, 3, 2, 1],
+            [1, 2, 3, 3, 4, 0, 0, 0, 0, 4, 3, 3, 2, 1],
+            [1, 2, 2, 3, 3, 4, 4, 4, 4, 3, 3, 2, 2, 1],
+            [0, 1, 2, 2, 3, 3, 3, 3, 3, 3, 2, 2, 1, 0],
+            [0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 1, 1, 0, 0],
+            [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0]
+        ],
+        reyna: [
+            [0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1, 1, 0, 0, 0], // Head
+            [0, 0, 0, 1, 1, 1, 1, 1, 0, 0],
+            [0, 0, 1, 0, 1, 2, 1, 0, 1, 0], // Shoulders
+            [0, 1, 3, 0, 1, 2, 1, 0, 3, 1], // Body
+            [0, 1, 3, 0, 2, 2, 2, 0, 3, 1],
+            [0, 0, 0, 1, 2, 2, 2, 1, 0, 0],
+            [0, 0, 0, 1, 2, 4, 2, 1, 0, 0], // Legs
+            [0, 0, 0, 1, 1, 0, 1, 1, 0, 0],
+            [0, 0, 0, 1, 1, 0, 1, 1, 0, 0],
+            [0, 0, 1, 1, 0, 0, 0, 1, 1, 0]
+        ]
+    },
+    // Palette
+    colors: [
+        null,     // 0 = Transparent
+        '#3f1b4f', // 1 = Dark Purple
+        '#9c27b0', // 2 = Reyna Purple
+        '#e1bee7', // 3 = Light Pink/White
+        '#111111', // 4 = Dark Grey
+    ],
+
+    // Game State
+    targets: [],
+    particles: [],
+    reyna: { x: 280, y: 140, active: true, timer: 0, scale: 4 }, // Stand on right
+    chat: { active: false, text: "", timer: 0 },
+    roasts: [
+        "PATHETIC", "MISSED AGAIN?", "ARE YOU BLIND?",
+        "TRY HARDER", "MY GRANDMA AIMS BETTER", "DISAPPOINTING"
+    ],
+    mouse: { x: 0, y: 0, click: false },
+    misses: 0,
+    shots: 0,
+    hits: 0,
+    wave: 0,
+
+    init: function () {
+        const container = document.getElementById('game-container-root');
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="game-overlay" id="game-start-screen">
+                <div class="game-title">SHOOT THE BLIND</div>
+                <div class="game-score-label">HIGH SCORE: ${this.highScore}</div>
+                <button class="game-start-btn" onclick="RetroGame.startGame()">PRACTICE AIM</button>
+                <p style="color: var(--ui-gray-500); font-family: var(--font-dot); font-size: 0.8rem; margin-top: 1rem;">
+                    DESTROY THE LEERS <br> CLICK TO SHOOT
+                </p>
+            </div>
+            <div class="game-overlay hidden" id="game-over-screen">
+                <div class="game-title" style="color: var(--ui-red);">SESSION COMPLETE</div>
+                <div class="game-score-label" id="final-score">SCORE: 0</div>
+                <button class="game-start-btn" onclick="RetroGame.resetGame()">AGAIN</button>
+            </div>
+            <div class="game-hud">
+                <div class="hud-item" id="hud-score">HITS: 0</div>
+                 <div class="hud-item" style="color: var(--ui-red);" id="hud-misses">MISS: 0</div>
+                <div class="hud-item" style="color: var(--ui-white);" id="hud-status">ACC: 100%</div>
+            </div>
+            <canvas id="game-canvas" style="cursor: none;"></canvas>
+        `;
+
+        this.canvas = document.getElementById('game-canvas');
+        this.ctx = this.canvas.getContext('2d');
+
+        // Handle Resize
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+
+        // Inputs
+        this.setupInputs();
+
+        // Initial Render
+        this.draw();
+    },
+
+    resize: function () {
+        if (!this.canvas) return;
+        const rect = this.canvas.parentElement.getBoundingClientRect();
+        this.canvas.width = rect.width;
+        this.canvas.height = rect.width * (9 / 16);
+        this.scale = this.canvas.width / this.width;
+
+        // Ensure pixelated look
+        this.ctx.imageSmoothingEnabled = false;
+    },
+
+    setupInputs: function () {
+        const updatePos = (clientX, clientY) => {
+            const rect = this.canvas.getBoundingClientRect();
+            this.mouse.x = (clientX - rect.left) / (rect.width / this.width);
+            this.mouse.y = (clientY - rect.top) / (rect.height / this.height);
+        };
+
+        window.addEventListener('mousemove', e => updatePos(e.clientX, e.clientY));
+
+        this.canvas.addEventListener('mousedown', () => {
+            this.mouse.click = true;
+            this.shoot();
+        });
+
+        // Mobile touch
+        this.canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const t = e.touches[0];
+            updatePos(t.clientX, t.clientY);
+            this.mouse.click = true;
+            this.shoot();
+        }, { passive: false });
+    },
+
+    startGame: function () {
+        document.getElementById('game-start-screen').classList.add('hidden');
+        document.getElementById('game-over-screen').classList.add('hidden');
+        this.resetState();
+        this.running = true;
+        this.loop();
+    },
+
+    resetGame: function () {
+        this.startGame();
+    },
+
+    resetState: function () {
+        this.score = 0;
+        this.shots = 0;
+        this.hits = 0;
+        this.misses = 0;
+        this.targets = [];
+        this.particles = [];
+        this.reyna = { x: 260, y: 130, active: true, timer: 0, scale: 5 }; // Persistent Reyna on right
+        this.chat = { active: false, text: "", timer: 0 };
+        this.spawnTimer = 0;
+        this.updateScore();
+    },
+
+    updateScore: function () {
+        const el = document.getElementById('hud-score');
+        if (el) el.innerText = `HITS: ${this.score}`;
+
+        const elMiss = document.getElementById('hud-misses');
+        if (elMiss) elMiss.innerText = `MISS: ${this.misses}`;
+
+        const acc = this.shots > 0 ? Math.floor((this.hits / this.shots) * 100) : 100;
+        const el2 = document.getElementById('hud-status');
+        if (el2) el2.innerText = `ACC: ${acc}%`;
+    },
+
+    triggerRoast: function () {
+        if (this.chat.active) return; // Already roasting
+        const txt = this.roasts[Math.floor(Math.random() * this.roasts.length)];
+        this.chat.text = txt;
+        this.chat.active = true;
+        this.chat.timer = 90; // 1.5s
+    },
+
+    shoot: function () {
+        if (!this.running) return;
+        this.shots++;
+
+        // Raycast / Hit check
+        let hit = false;
+        // Iterate backwards
+        for (let i = this.targets.length - 1; i >= 0; i--) {
+            let t = this.targets[i];
+            const size = 20 * t.scale;
+
+            if (this.mouse.x > t.x - size / 2 &&
+                this.mouse.x < t.x + size / 2 &&
+                this.mouse.y > t.y - size / 2 &&
+                this.mouse.y < t.y + size / 2) {
+
+                // HIT
+                this.spawnParticles(t.x, t.y, '#9c27b0'); // Purple blood/magic
+                this.targets.splice(i, 1);
+                this.score++;
+                this.hits++;
+                hit = true;
+                break; // One shot one kill
+            }
+        }
+
+        if (!hit) {
+            this.misses++;
+            if (this.misses % 3 === 0) { // Roast every 3 misses
+                this.triggerRoast();
+            }
+        }
+
+        this.updateScore();
+    },
+
+    gameOver: function () {
+        // Just a session end, no real 'death' in aim trainer typically?
+        // Or maybe if you miss too many?
+        // Let's keep it endless for now or until user stops.
+
+        // For 'Shoot the Blind': If too many eyes on screen?
+    },
+
+    spawnTarget: function () {
+        // Random side
+        const side = Math.random() > 0.5 ? 'left' : 'right';
+        const startX = side === 'left' ? -20 : this.width + 20;
+        const destX = side === 'left' ? this.width + 20 : -20;
+
+        this.targets.push({
+            x: startX,
+            y: Math.random() * (this.height - 40) + 20,
+            vx: (side === 'left' ? 1 : -1) * (Math.random() * 1 + 0.5),
+            vy: (Math.random() - 0.5) * 1,
+            scale: Math.random() * 0.5 + 0.8, // Varied sizes
+            life: 1000
+        });
+    },
+
+    loop: function () {
+        if (!this.running) return;
+        this.update();
+        this.draw();
+        requestAnimationFrame(() => this.loop());
+    },
+
+    update: function () {
+        // Spawn
+        this.spawnTimer++;
+        if (this.spawnTimer > 60) { // Every second-ish
+            this.spawnTarget();
+            this.spawnTimer = 0;
+        }
+
+        // Targets
+        for (let i = this.targets.length - 1; i >= 0; i--) {
+            let t = this.targets[i];
+            t.x += t.vx;
+            t.y += t.vy;
+
+            // Bounce Y (Floor at 160)
+            if (t.y < 10 || t.y > 150) t.vy *= -1;
+
+            // Remove if off screen far side
+            if ((t.vx > 0 && t.x > this.width + 30) || (t.vx < 0 && t.x < -30)) {
+                this.targets.splice(i, 1);
+                this.misses++; // Missed target
+                this.triggerRoast();
+                this.updateScore();
+            }
+        }
+
+        // Chat Timer
+        if (this.chat.active) {
+            this.chat.timer--;
+            if (this.chat.timer <= 0) this.chat.active = false;
+        }
+
+        // Particles
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            let p = this.particles[i];
+            p.life--;
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.life <= 0) this.particles.splice(i, 1);
+        }
+    },
+
+    triggerReyna: function () {
+        // This function is no longer used as Reyna is persistent and roasts via triggerRoast
+    },
+
+    spawnParticles: function (x, y, color) {
+        for (let i = 0; i < 8; i++) {
+            this.particles.push({
+                x: x, y: y,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                life: 30,
+                color: color
+            });
+        }
+    },
+
+    draw: function () {
+        // Clear (Pitch Black)
+        this.ctx.fillStyle = '#000000';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        this.ctx.save();
+        this.ctx.scale(this.scale, this.scale);
+
+        // Floor
+        const floorY = 170;
+        this.ctx.fillStyle = '#111';
+        this.ctx.fillRect(0, floorY, this.width, this.height - floorY);
+        this.ctx.strokeStyle = '#333';
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, floorY); this.ctx.lineTo(this.width, floorY);
+        this.ctx.stroke();
+
+        // Targets (Eyes)
+        this.targets.forEach(t => {
+            this.drawSprite(this.sprites.eye, t.x, t.y, t.scale * 2);
+        });
+
+        // Reyna (Persistent on Right)
+        if (this.reyna.active) {
+            // Standing on floor (y approx 170)
+            // Sprite is roughly 11 high. Scale 5 => 55px high.
+            // Center Y should be 170 - 55/2 = 142.5
+            this.drawSprite(this.sprites.reyna, this.reyna.x, 145, this.reyna.scale);
+
+            // Chat Bubble
+            if (this.chat.active) {
+                this.drawChatBubble(this.chat.text, this.reyna.x - 20, 110);
+            }
+        }
+
+        // Particles
+        this.particles.forEach(p => {
+            this.ctx.fillStyle = p.color;
+            this.ctx.fillRect(p.x, p.y, 2, 2);
+        });
+
+        // Crosshair
+        this.ctx.strokeStyle = '#fff';
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        this.ctx.arc(this.mouse.x, this.mouse.y, 5, 0, Math.PI * 2);
+        this.ctx.moveTo(this.mouse.x - 8, this.mouse.y);
+        this.ctx.lineTo(this.mouse.x + 8, this.mouse.y);
+        this.ctx.moveTo(this.mouse.x, this.mouse.y - 8);
+        this.ctx.lineTo(this.mouse.x, this.mouse.y + 8);
+        this.ctx.stroke();
+
+        this.ctx.restore();
+    },
+
+    drawChatBubble: function (text, x, y) {
+        this.ctx.fillStyle = '#fff';
+        const w = text.length * 6 + 10;
+        const h = 14;
+        this.ctx.fillRect(x - w, y, w, h);
+
+        // Triangle tail
+        this.ctx.beginPath();
+        this.ctx.moveTo(x, y + h - 4);
+        this.ctx.lineTo(x + 5, y + h);
+        this.ctx.lineTo(x, y + h);
+        this.ctx.fill();
+
+        this.ctx.fillStyle = '#000';
+        this.ctx.font = '8px monospace';
+        this.ctx.fillText(text, x - w + 5, y + 10);
+    },
+
+    drawSprite: function (matrix, cx, cy, s) {
+        const h = matrix.length;
+        const w = matrix[0].length;
+        const startX = Math.floor(cx - (w * s) / 2);
+        const startY = Math.floor(cy - (h * s) / 2);
+
+        for (let r = 0; r < h; r++) {
+            for (let c = 0; c < w; c++) {
+                const colorIndex = matrix[r][c];
+                if (colorIndex !== 0) {
+                    this.ctx.fillStyle = this.colors[colorIndex];
+                    this.ctx.fillRect(startX + c * s, startY + r * s, s, s);
+                }
+            }
+        }
+    }
+};
+
+// HOME RENDERER
 function renderGameLanding(agents) {
-    const jett = agents.find(a => a.displayName === 'Jett') || agents[0];
-    const others = agents.filter(a => a.uuid !== jett.uuid).slice(0, 6); // Show top 6
+    const others = agents.slice(0, 6); // Just grab some agents for the bottom list
 
     return `
         <div class="landing-container">
-            <section class="landing-hero">
-                <div class="hero-bg-text glitch-text" data-text="VALORANT">VALORANT</div>
-                
-                <div class="bg-deco-text top-left">PROTOCOL_781-A</div>
-                <div class="bg-deco-text bottom-right">SYSTEM_READY</div>
-                <div class="bg-deco-text vertical-scroll">01 00 11 01 01</div>
-                
-                <div class="floating-shape shape-1"></div>
-                <div class="floating-shape shape-2"></div>
-                
-                <div class="jett-container">
-                    <img src="${jett.fullPortrait}" alt="${jett.displayName}" class="jett-image">
+            <section class="landing-hero" style="height: 80vh; border-bottom: 1px solid var(--ui-red);">
+                <!-- GAME ROOT -->
+                <div id="game-container-root" class="game-container">
+                     <!-- Canvas injected by RetroGame.init() -->
                 </div>
             </section>
 
@@ -182,12 +577,12 @@ function renderGameLanding(agents) {
                     `).join('')}
                 </div>
                 
-                <div class="landing-actions" style="text-align: center;">
-                     <button class="cta-btn primary" data-page="agents">ROSTER</button>
+                <div class="landing-actions" style="text-align: center; margin-top: 2rem;">
+                     <button class="cta-btn primary" data-page="agents">VIEW FULL ROSTER</button>
                 </div>
             </section>
 
-            <!-- EXPLORE ALL CATEGORIES -->
+             <!-- EXPLORE ALL CATEGORIES -->
             <section class="landing-feature" style="margin-top: 4rem;">
                 <div class="feature-header">
                     <h3 class="glitch-text" data-text="DATABASE">DATABASE</h3>
@@ -201,28 +596,28 @@ function renderGameLanding(agents) {
                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('weapons')">
                         <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">WEAPONS</h3>
                     </div>
-                    <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('cards')">
+                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('cards')">
                         <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">CARDS</h3>
                     </div>
-                    <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('buddies')">
+                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('buddies')">
                         <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">BUDDIES</h3>
                     </div>
-                    <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('sprays')">
+                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('sprays')">
                         <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">SPRAYS</h3>
                     </div>
-                    <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('titles')">
+                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('titles')">
                         <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">TITLES</h3>
                     </div>
-                    <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('currency')">
+                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('currency')">
                         <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">CURRENCY</h3>
                     </div>
-                    <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('seasons')">
+                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('seasons')">
                         <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">SEASONS</h3>
                     </div>
-                    <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('ranks')">
+                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('ranks')">
                         <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">RANKS</h3>
                     </div>
-                    <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('about')">
+                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('about')">
                         <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">ABOUT</h3>
                     </div>
                 </div>
@@ -763,6 +1158,7 @@ function attachEventListeners(page) {
     // Home Page Agent Clicks
     if (page === 'home') {
         getAgents().then(agents => attachAgentClick(agents));
+        if (typeof RetroGame !== 'undefined') RetroGame.init();
     }
 }
 
