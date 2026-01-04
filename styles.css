@@ -47,19 +47,88 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* Dot Background Pattern */
+/* Dot Background Pattern & Animation */
 .bg-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 200vw;
+    height: 200vh;
     background-image:
         radial-gradient(var(--ui-gray-200) 1px, transparent 1px);
     background-size: 20px 20px;
     opacity: 0.15;
     pointer-events: none;
     z-index: -1;
+    transform: perspective(500px) rotateX(20deg) translateY(-100px) translateZ(-50px);
+    animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+    0% {
+        transform: perspective(500px) rotateX(20deg) translateY(0) translateZ(-50px);
+    }
+
+    100% {
+        transform: perspective(500px) rotateX(20deg) translateY(-40px) translateZ(-50px);
+    }
+}
+
+/* CRT Scanline Overlay */
+.scanlines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(to bottom,
+            rgba(255, 255, 255, 0),
+            rgba(255, 255, 255, 0) 50%,
+            rgba(0, 0, 0, 0.1) 50%,
+            rgba(0, 0, 0, 0.1));
+    background-size: 100% 4px;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* Data Ticker */
+.ticker-wrap {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--ui-black);
+    border-top: 1px solid var(--ui-red);
+    height: 30px;
+    overflow: hidden;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+}
+
+.ticker {
+    display: inline-block;
+    white-space: nowrap;
+    animation: marquee 30s linear infinite;
+    font-family: var(--font-dot);
+    font-size: 0.8rem;
+    color: var(--ui-gray-500);
+}
+
+.ticker-item {
+    display: inline-block;
+    padding-left: 50px;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(-100%, 0);
+    }
 }
 
 a {
@@ -204,9 +273,11 @@ h6 {
 }
 
 /* Landing Hero */
+/* Landing Hero */
 .landing-hero {
     position: relative;
-    height: 70vh;
+    height: 100vh;
+    /* Full viewport height */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -217,30 +288,41 @@ h6 {
 
 .hero-bg-text {
     font-family: var(--font-dot);
-    font-size: 15vw;
+    font-size: 18vw;
+    /* Dramatically larger */
     color: var(--ui-gray-100);
     position: absolute;
     z-index: 0;
     white-space: nowrap;
-    opacity: 0.5;
+    opacity: 0.3;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
 }
 
 .jett-container {
     z-index: 1;
-    position: relative;
-    height: 100%;
+    position: absolute;
+    bottom: 0;
+    right: 5%;
+    height: 90%;
+    /* Occupy most of the height */
+    width: auto;
+    display: flex;
+    align-items: flex-end;
 }
 
 .jett-image {
     height: 100%;
+    width: auto;
     object-fit: contain;
     filter: grayscale(100%) contrast(1.2);
-    transition: filter 0.5s ease;
-    transform: scale(0.9);
+    transition: filter 0.5s ease, transform 0.5s ease;
 }
 
 .jett-image:hover {
-    filter: grayscale(0%) contrast(1);
+    filter: grayscale(0%) contrast(1.1);
+    transform: scale(1.02);
 }
 
 /* Featured Section */
@@ -732,30 +814,48 @@ h6 {
     }
 
     .landing-hero {
-        height: 50vh;
+        height: 100vh;
+        /* Full screen on mobile too */
+        flex-direction: column;
+        justify-content: flex-end;
+        /* Push content to bottom */
     }
 
     .hero-bg-text {
-        font-size: 20vw;
+        font-size: 25vw;
+        /* Massage text on mobile */
+        top: 20%;
+        /* Move text up */
+        transform: translateY(0);
+        opacity: 0.2;
     }
 
     .jett-container {
-        position: absolute;
-        bottom: 0;
-        right: 0;
+        position: relative;
+        /* Change from absolute to relative/grid flow if needed, or keep absolute */
         width: 100%;
-        height: 100%;
-        overflow: visible;
+        height: 75%;
+        /* Visible portion */
+        right: auto;
+        bottom: 0;
         display: flex;
-        align-items: flex-end;
         justify-content: center;
+        /* Center Jett */
+        align-items: flex-end;
+        overflow: hidden;
     }
 
     .jett-image {
-        height: 90vh;
-        /* Taller than container */
+        height: 100%;
         width: auto;
-        transform: scale(1.2);
+        transform: none;
+        /* Reset desktop scale */
+        object-fit: cover;
+        /* Cover or contain depending on image aspect */
+        object-position: top center;
+        /* Focus on upper body */
+        max-width: none;
+        /* Allow overflow */
     }
 
     /* Fix Map Modal on Mobile */
@@ -766,20 +866,82 @@ h6 {
         max-height: none;
     }
 }
+
 /* Card Detail View Specifics */
 .card-detail-view {
-    /* Ensure grid layout is active (inherited from modal-detail but enforced just in case) */
     display: grid;
-    /* Default Mobile: 1 Column */
     grid-template-columns: 1fr;
-    align-items: center; /* Center vertically */
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    height: 100%;
+    /* Ensure full height usage */
+    overflow-y: auto;
+    /* Allow scrolling if content is too tall */
+}
+
+/* Info container */
+.card-detail-info {
+    text-align: left;
+    width: 100%;
+    order: 2;
+    /* Image first on mobile usually looks better, or keep title first. detailed-info default is order 2 in grid if not specified, but let's be explicit if we want image first */
+}
+
+/* Title Typography */
+.card-detail-title {
+    font-size: 2rem;
+    /* Mobile first */
+    color: var(--ui-white);
+    margin-bottom: 0.5rem;
+    line-height: 1;
+}
+
+/* Image container */
+.card-detail-img-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    order: 1;
+    /* Show image first on mobile */
+}
+
+/* The Image itself */
+.card-detail-img {
+    max-height: 40vh;
+    /* Restricted height on mobile */
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    border: 2px solid var(--ui-white);
+    box-shadow: 0 0 30px rgba(215, 25, 32, 0.5);
 }
 
 @media(min-width: 768px) {
     .card-detail-view {
-        /* Desktop: 2 Columns */
         grid-template-columns: 1fr 1fr;
-        /* Ensure Title (1st child) is Left, Image (2nd child) is Right */
-        /* This is the default order, so no specific order property needed if HTML is Title then Image */
+        padding: var(--space-lg);
+        overflow-y: hidden;
+        /* Fits screen on desktop */
+    }
+
+    .card-detail-info {
+        order: 1;
+        /* Text left */
+    }
+
+    .card-detail-img-container {
+        order: 2;
+        /* Image right */
+    }
+
+    .card-detail-title {
+        font-size: 4rem;
+        /* Desktop size */
+    }
+
+    .card-detail-img {
+        max-height: 70vh;
+        /* Larger on desktop */
     }
 }

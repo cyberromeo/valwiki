@@ -16,7 +16,8 @@
     <meta property="og:url" content="https://valwiki.vercel.app/"> <!-- Placeholder URL -->
     <meta property="og:title" content="VALORANT WIKI // RETRO DB">
     <meta property="og:description" content="Access classified VALORANT data. Retro-futuristic database interface.">
-    <meta property="og:image" content="assets/logo.png">
+    <meta property="og:image" content="logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -36,17 +37,34 @@
 
 <body>
     <!-- Abstract Background Overlay -->
-    <div class="bg-overlay">
-        <!-- Retro UI usually relies on CSS gradients or SVGs in styles, overlay div kept for compatibility -->
+    <div class="bg-overlay"></div>
+
+    <!-- CRT Scanlines -->
+    <div class="scanlines"></div>
+
+    <!-- Data Ticker -->
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <span class="ticker-item">SYSTEM STATUS: ONLINE //</span>
+            <span class="ticker-item">NETWORK TRAFFIC: NORMAL //</span>
+            <span class="ticker-item">DATABASE CONNECTION: SECURE //</span>
+            <span class="ticker-item">PROTOCOL_781-A ACTIVE //</span>
+            <span class="ticker-item">FETCHING AGENT DATA... //</span>
+            <span class="ticker-item">ESTABLISHED CONNECTION TO VALORANT API //</span>
+            <span class="ticker-item">APP BY SRIHARI //</span>
+            <span class="ticker-item">USER: AUTHORIZED //</span>
+        </div>
     </div>
 
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#" class="logo active" data-page="home">
-                <!-- Simple dot logo or text -->
-                <span class="logo-text">VALORANT</span>
-                <span class="logo-text" style="color: var(--ui-red); margin-left: 5px;">WIKI</span>
+            <a href="#" class="logo active" data-page="home" style="display: flex; align-items: center; gap: 0.5rem;">
+                <img src="logo.png" alt="Valorant Wiki Logo" style="height: 2rem; width: auto;">
+                <div>
+                    <span class="logo-text">VALORANT</span>
+                    <span class="logo-text" style="color: var(--ui-red); margin-left: 0;">WIKI</span>
+                </div>
             </a>
 
             <ul class="nav-links">

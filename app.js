@@ -119,8 +119,9 @@ function hideLoader() {
 function openModal(htmlContent, className = '') {
     if (!modal || !modalContent) return;
 
-    // Reset classes
-    modalContent.className = 'modal-content';
+    // Reset classes - clear all custom classes, keep ID functionality
+    // Important: Do NOT add 'modal-content' class here as it's already on the parent
+    modalContent.className = '';
     if (className) modalContent.classList.add(className);
 
     modalContent.innerHTML = htmlContent;
@@ -408,14 +409,15 @@ function renderPlayerCard(card) {
 
 function renderCardDetail(card) {
     // Modal Content for Card
+    // Inline styles removed in favor of CSS classes for responsiveness
     return `
         <div class="modal-detail card-detail-view">
-            <div class="detail-info" style="text-align: left; width: 100%;">
-                <h2 style="font-size: 4rem; color: var(--ui-white); margin-bottom: 0.5rem;">${card.displayName}</h2>
+            <div class="detail-info card-detail-info">
+                <h2 class="card-detail-title">${card.displayName}</h2>
                 <div class="role-badge">PLAYER CARD</div>
             </div>
-            <div class="detail-img" style="width: 100%;">
-                <img src="${card.largeArt}" alt="${card.displayName}" style="width: 100%; height: auto; border: 2px solid var(--ui-white); box-shadow: 0 0 30px rgba(215, 25, 32, 0.5);">
+            <div class="detail-img card-detail-img-container">
+                <img src="${card.largeArt}" alt="${card.displayName}" class="card-detail-img">
             </div>
         </div>
     `;
@@ -471,104 +473,6 @@ function renderRanksPage(ranks) {
             </div>
         </div>
         `;
-}
-
-// NEW CATEGORIES
-function renderBuddiesPage(buddies) {
-    return `
-        <div class="container">
-            <div class="page-header">
-                <h1>GUN BUDDIES</h1>
-            </div>
-            <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));">
-                ${buddies.slice(0, 200).map(buddy => `
-                    <div class="card" style="text-align: center;">
-                        <img src="${buddy.displayIcon}" alt="${buddy.displayName}" style="width: 80px; margin: 0 auto; display: block;">
-                        <h3 style="font-size: 0.9rem; margin-top: 1rem;">${buddy.displayName}</h3>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-}
-
-function renderSpraysPage(sprays) {
-    return `
-        <div class="container">
-            <div class="page-header">
-                <h1>SPRAYS</h1>
-            </div>
-            <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
-                ${sprays.slice(0, 200).map(spray => `
-                    <div class="card" style="text-align: center;">
-                        <img src="${spray.displayIcon}" alt="${spray.displayName}" style="opacity: 0.9;">
-                        <h3 style="font-size: 0.9rem; margin-top: 0.5rem;">${spray.displayName}</h3>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-}
-
-function renderTitlesPage(titles) {
-    return `
-        <div class="container">
-            <div class="page-header">
-                <h1>PLAYER TITLES</h1>
-            </div>
-            <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
-                ${titles.slice(0, 300).map(title => `
-                    <div class="card" style="padding: 1rem; text-align: center;">
-                        <h3 style="font-size: 1rem; color: var(--ui-white); margin: 0;">${title.titleText}</h3>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-}
-
-function renderCurrencyPage(currencies) {
-    return `
-        <div class="container">
-            <div class="page-header">
-                <h1>CURRENCY</h1>
-            </div>
-            <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
-                ${currencies.map(curr => `
-                    <div class="card" style="text-align: center;">
-                        <img src="${curr.displayIcon}" alt="${curr.displayName}" style="width: 64px; margin: 0 auto;">
-                        <h3 style="margin-top: 1rem;">${curr.displayName}</h3>
-                        <p>${curr.description || ''}</p>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-}
-
-function renderSeasonsPage(seasons) {
-    const sorted = [...seasons].reverse();
-    return `
-        <div class="container">
-            <div class="page-header">
-                <h1>SEASONS & ACTS</h1>
-            </div>
-            <div class="grid" style="grid-template-columns: 1fr;">
-                ${sorted.map(s => `
-                    <div class="card" style="display: flex; align-items: center; gap: 2rem;">
-                         <div style="flex-shrink: 0;">
-                            <h2 style="color: var(--ui-red); margin-bottom: 0;">${s.displayName}</h2>
-                            <span style="color: var(--ui-gray-500); font-family: var(--font-dot);">${s.seasonUuid || 'Details'}</span>
-                         </div>
-                         <div>
-                            <p>Start: ${s.startTime ? new Date(s.startTime).toLocaleDateString() : 'N/A'}</p>
-                            <p>End: ${s.endTime ? new Date(s.endTime).toLocaleDateString() : 'N/A'}</p>
-                         </div>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
 }
 
 // NEW CATEGORIES
