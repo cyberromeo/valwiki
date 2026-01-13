@@ -568,7 +568,7 @@ function renderGameLanding(agents) {
                 
                 <div class="new-agents-grid">
                     ${others.map(agent => `
-                        <div class="new-agent-card cta-btn" data-uuid="${agent.uuid}">
+                        <div class="new-agent-card cta-btn" data-uuid="${agent.uuid}" tabindex="0" role="button" aria-label="View details for ${agent.displayName}">
                             <div class="ag-img">
                                 <img src="${agent.displayIcon}" alt="${agent.displayName}">
                             </div>
@@ -629,7 +629,7 @@ function renderGameLanding(agents) {
 // AGENTS
 function renderAgentCard(agent) {
     return `
-        <div class="card agent-card" data-uuid="${agent.uuid}" style="cursor: pointer;">
+        <div class="card agent-card" data-uuid="${agent.uuid}" style="cursor: pointer;" tabindex="0" role="button" aria-label="View details for ${agent.displayName}">
             <img src="${agent.displayIcon}" alt="${agent.displayName}">
             <h3>${agent.displayName}</h3>
             <p>// ${agent.role ? agent.role.displayName : 'UNKNOWN'}</p>
@@ -693,7 +693,7 @@ function renderAgentDetail(agent) {
 // WEAPONS
 function renderWeaponCard(weapon) {
     return `
-        <div class="card weapon-card" data-uuid="${weapon.uuid}" style="cursor: pointer;">
+        <div class="card weapon-card" data-uuid="${weapon.uuid}" style="cursor: pointer;" tabindex="0" role="button" aria-label="View details for ${weapon.displayName}">
             <img src="${weapon.displayIcon}" alt="${weapon.displayName}" style="object-fit: contain; aspect-ratio: 16/9;">
             <h3>${weapon.displayName}</h3>
             <p>${weapon.shopData ? weapon.shopData.category : 'Melee'}</p>
@@ -745,7 +745,7 @@ function renderWeaponsPage(weapons) {
 // MAPS
 function renderMapCard(map) {
     return `
-        <div class="card map-card" data-uuid="${map.uuid}" style="cursor: pointer;">
+        <div class="card map-card" data-uuid="${map.uuid}" style="cursor: pointer;" tabindex="0" role="button" aria-label="View details for ${map.displayName}">
             <img src="${map.splash}" alt="${map.displayName}" style=" object-fit: cover;">
                 <h3>${map.displayName}</h3>
                 <p>${map.coordinates || 'Unknown Coordinates'}</p>
@@ -1165,11 +1165,18 @@ function attachEventListeners(page) {
 function attachWeaponClick(weapons) {
     const selector = '.weapon-card';
     document.querySelectorAll(selector).forEach(card => {
-        card.addEventListener('click', () => {
+        const handler = () => {
             const uuid = card.dataset.uuid;
             const weapon = weapons.find(w => w.uuid === uuid);
             if (weapon) {
                 openModal(renderWeaponDetail(weapon));
+            }
+        };
+        card.addEventListener('click', handler);
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handler();
             }
         });
     });
@@ -1179,11 +1186,18 @@ function attachWeaponClick(weapons) {
 function attachMapClick(maps) {
     const selector = '.map-card';
     document.querySelectorAll(selector).forEach(card => {
-        card.addEventListener('click', () => {
+        const handler = () => {
             const uuid = card.dataset.uuid;
             const map = maps.find(m => m.uuid === uuid);
             if (map) {
                 openModal(renderMapDetail(map), 'map-modal');
+            }
+        };
+        card.addEventListener('click', handler);
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handler();
             }
         });
     });
@@ -1193,11 +1207,18 @@ function attachMapClick(maps) {
 function attachAgentClick(agents) {
     const selector = '.agent-card, .new-agent-card';
     document.querySelectorAll(selector).forEach(card => {
-        card.addEventListener('click', () => {
+        const handler = () => {
             const uuid = card.dataset.uuid;
             const agent = agents.find(a => a.uuid === uuid);
             if (agent) {
                 openModal(renderAgentDetail(agent));
+            }
+        };
+        card.addEventListener('click', handler);
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handler();
             }
         });
     });
