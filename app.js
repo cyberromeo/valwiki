@@ -458,7 +458,7 @@ const RetroGame = {
 
     draw: function () {
         // Clear (Pitch Black)
-        this.ctx.fillStyle = '#000000';
+        this.ctx.fillStyle = '#1B1D1F';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.ctx.save();
@@ -732,7 +732,7 @@ function renderWeaponDetail(weapon) {
                     ` : '<p>No stats available for this weapon.</p>'}
                 </div>
             </div>
-        </div >
+        </div>
         `;
 }
 
@@ -1140,7 +1140,7 @@ function attachEventListeners(page) {
             const p = e.currentTarget.dataset.page;
             if (p) {
                 navigateTo(p);
-                window.history.pushState({}, '', `#${p} `);
+                window.history.pushState({}, '', `#${p}`);
             }
         });
     });
@@ -1172,7 +1172,7 @@ function attachEventListeners(page) {
                     const p = card.dataset.page;
                     if (p) {
                         navigateTo(p);
-                        window.history.pushState({}, '', `#${p} `);
+                        window.history.pushState({}, '', `#${p}`);
                     }
                 });
             });
@@ -1221,15 +1221,6 @@ function attachEventListeners(page) {
                 });
                 parent.classList.toggle('open');
             });
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.nav-dropdown')) {
-                document.querySelectorAll('.nav-dropdown.open').forEach(d => {
-                    d.classList.remove('open');
-                });
-            }
         });
     }
 
@@ -1287,6 +1278,23 @@ document.querySelector('.modal-close').addEventListener('click', () => {
     document.body.style.overflow = 'auto';
 });
 
+// Logo click to go home
+document.querySelector('.logo')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    navigateTo('home');
+    window.history.pushState({}, '', '#home');
+    if (window.innerWidth < 900) navContainer.classList.remove('active');
+});
+
+// Close dropdown when clicking outside (add once)
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-dropdown')) {
+        document.querySelectorAll('.nav-dropdown.open').forEach(d => {
+            d.classList.remove('open');
+        });
+    }
+});
+
 document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -1294,7 +1302,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
         // If it's a dropdown parent, don't navigate unless it has data-page
         if (page && page !== 'collection') {
             navigateTo(page);
-            window.history.pushState({}, '', `#${page} `);
+            window.history.pushState({}, '', `#${page}`);
             if (window.innerWidth < 900) navContainer.classList.remove('active');
         }
     });

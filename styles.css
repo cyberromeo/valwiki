@@ -331,6 +331,7 @@ h1, h2, h3, h4, h5, h6 {
    ========================================= */
 #app {
     padding-top: 72px;
+    padding-bottom: 48px;
     min-height: 100vh;
 }
 
@@ -709,12 +710,12 @@ canvas#game-canvas {
 }
 
 .filter-btn {
-    background: transparent;
-    border: 1px solid var(--ui-gray-200);
-    color: var(--ui-gray-500);
+    background: rgba(241, 241, 241, 0.08);
+    border: 1px solid rgba(241, 241, 241, 0.25);
+    color: var(--ui-white);
     padding: 10px 16px;
     border-radius: 20px;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     cursor: pointer;
     font-family: var(--font-dot);
     min-height: 44px;
