@@ -548,26 +548,62 @@ const RetroGame = {
 };
 
 // HOME RENDERER
-function renderGameLanding(agents) {
-    const others = agents.slice(0, 6); // Just grab some agents for the bottom list
+function renderHomePage(agents) {
+    const featured = agents.slice(0, 6);
+
+    const categories = [
+        { emoji: '🗺️', name: 'MAPS', page: 'maps' },
+        { emoji: '🔫', name: 'WEAPONS', page: 'weapons' },
+        { emoji: '🃏', name: 'CARDS', page: 'cards' },
+        { emoji: '🔫', name: 'BUDDIES', page: 'buddies' },
+        { emoji: '🎨', name: 'SPRAYS', page: 'sprays' },
+        { emoji: '🏷️', name: 'TITLES', page: 'titles' },
+        { emoji: '💰', name: 'CURRENCY', page: 'currency' },
+        { emoji: '📅', name: 'SEASONS', page: 'seasons' },
+        { emoji: '🏆', name: 'RANKS', page: 'ranks' },
+        { emoji: 'ℹ️', name: 'ABOUT', page: 'about' },
+    ];
 
     return `
         <div class="landing-container">
-            <section class="landing-hero" style="height: 80vh; border-bottom: 1px solid var(--ui-red);">
-                <!-- GAME ROOT -->
-                <div id="game-container-root" class="game-container">
-                     <!-- Canvas injected by RetroGame.init() -->
+            <!-- HERO SECTION -->
+            <section class="landing-hero hero-section">
+                <div class="bg-deco-text" style="top: 2rem; left: 2rem;">VLT/01<br>PROTOCOL</div>
+                <div class="bg-deco-text" style="bottom: 2rem; right: 2rem; text-align: right;">SEC/781<br>CLEARANCE</div>
+                <div class="vertical-scroll">▸ SYSTEM ONLINE ▸ DATABASE LOADED ▸ ACCESS GRANTED ▸</div>
+                <div class="floating-shape" style="top: 15%; left: 10%;"></div>
+                <div class="floating-shape" style="bottom: 20%; right: 8%;"></div>
+                <div class="floating-shape" style="top: 40%; right: 15%; width: 8px; height: 8px;"></div>
+                
+                <h1 class="hero-title glitch-text" data-text="VALORANT WIKI">VALORANT WIKI</h1>
+                <p class="hero-subtitle">CLASSIFIED DATABASE // ACCESS GRANTED</p>
+                <button class="cta-btn primary hero-cta" data-page="agents">ENTER DATABASE</button>
+            </section>
+
+            <!-- CATEGORY QUICK ACCESS GRID -->
+            <section class="landing-feature">
+                <div class="feature-header">
+                    <h3 class="glitch-text" data-text="DATABASE">DATABASE</h3>
+                    <div class="feature-line"></div>
+                </div>
+                <div class="category-grid">
+                    ${categories.map(cat => `
+                        <div class="category-card" data-page="${cat.page}">
+                            <span class="category-emoji">${cat.emoji}</span>
+                            <span class="category-name">${cat.name}</span>
+                        </div>
+                    `).join('')}
                 </div>
             </section>
 
+            <!-- FEATURED AGENTS -->
             <section class="landing-feature">
                 <div class="feature-header">
                     <h3 class="glitch-text" data-text="AGENTS">AGENTS</h3>
                     <div class="feature-line"></div>
                 </div>
-                
                 <div class="new-agents-grid">
-                    ${others.map(agent => `
+                    ${featured.map(agent => `
                         <div class="new-agent-card cta-btn" data-uuid="${agent.uuid}">
                             <div class="ag-img">
                                 <img src="${agent.displayIcon}" alt="${agent.displayName}">
@@ -576,50 +612,21 @@ function renderGameLanding(agents) {
                         </div>
                     `).join('')}
                 </div>
-                
                 <div class="landing-actions" style="text-align: center; margin-top: 2rem;">
-                     <button class="cta-btn primary" data-page="agents">VIEW FULL ROSTER</button>
+                    <button class="cta-btn primary" data-page="agents">VIEW FULL ROSTER</button>
                 </div>
             </section>
 
-             <!-- EXPLORE ALL CATEGORIES -->
-            <section class="landing-feature" style="margin-top: 4rem;">
+            <!-- AIM TRAINER MINI GAME -->
+            <section class="landing-feature aim-trainer-section">
                 <div class="feature-header">
-                    <h3 class="glitch-text" data-text="DATABASE">DATABASE</h3>
+                    <h3 class="glitch-text" data-text="AIM TRAINER">AIM TRAINER</h3>
                     <div class="feature-line"></div>
                 </div>
-                
-                <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;">
-                    <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('maps')">
-                        <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">MAPS</h3>
-                    </div>
-                    <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('weapons')">
-                        <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">WEAPONS</h3>
-                    </div>
-                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('cards')">
-                        <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">CARDS</h3>
-                    </div>
-                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('buddies')">
-                        <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">BUDDIES</h3>
-                    </div>
-                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('sprays')">
-                        <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">SPRAYS</h3>
-                    </div>
-                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('titles')">
-                        <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">TITLES</h3>
-                    </div>
-                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('currency')">
-                        <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">CURRENCY</h3>
-                    </div>
-                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('seasons')">
-                        <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">SEASONS</h3>
-                    </div>
-                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('ranks')">
-                        <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">RANKS</h3>
-                    </div>
-                     <div class="card" style="text-align: center; cursor: pointer; border-radius: 50px;" onclick="navigateTo('about')">
-                        <h3 style="margin: 0; padding: 0.5rem; color: var(--ui-white); font-size: 1rem;">ABOUT</h3>
-                    </div>
+                <div class="aim-trainer-preview" id="aim-trainer-preview">
+                    <p class="aim-trainer-desc">SHOOT THE BLIND — DESTROY THE LEERS BEFORE THEY ESCAPE</p>
+                    <p class="aim-trainer-highscore">HIGH SCORE: ${RetroGame.highScore}</p>
+                    <button class="cta-btn primary" id="play-aim-trainer-btn">▶ PLAY AIM TRAINER</button>
                 </div>
             </section>
         </div>
@@ -1055,9 +1062,9 @@ async function navigateTo(page) {
     try {
         switch (page) {
             case 'home':
-                const agentsHome = await getAgents();
-                app.innerHTML = renderGameLanding(agentsHome);
-                break;
+                            const agentsHome = await getAgents();
+                            app.innerHTML = renderHomePage(agentsHome);
+                            break;
             case 'agents':
                 const agents = await getAgents();
                 app.innerHTML = renderAgentsPage(agents);
@@ -1155,12 +1162,76 @@ function attachEventListeners(page) {
         });
     }
 
-    // Home Page Agent Clicks
-    if (page === 'home') {
-        getAgents().then(agents => attachAgentClick(agents));
-        if (typeof RetroGame !== 'undefined') RetroGame.init();
+    // Home Page Agent Clicks + Aim Trainer + Category Cards
+        if (page === 'home') {
+            getAgents().then(agents => attachAgentClick(agents));
+
+            // Category card navigation
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const p = card.dataset.page;
+                    if (p) {
+                        navigateTo(p);
+                        window.history.pushState({}, '', `#${p} `);
+                    }
+                });
+            });
+
+            // Aim trainer play button
+            const playBtn = document.getElementById('play-aim-trainer-btn');
+            if (playBtn) {
+                playBtn.addEventListener('click', () => {
+                    const section = document.querySelector('.aim-trainer-section');
+                    if (!section) return;
+                    // Replace preview with game container
+                    section.innerHTML = `
+                        <div class="feature-header">
+                            <h3 class="glitch-text" data-text="AIM TRAINER">AIM TRAINER</h3>
+                            <div class="feature-line"></div>
+                        </div>
+                        <div id="game-container-root" class="game-container"></div>
+                        <div style="text-align: center; margin-top: 1rem;">
+                            <button class="cta-btn" id="exit-aim-trainer-btn" style="font-size: 0.8rem;">✕ EXIT TRAINER</button>
+                        </div>
+                    `;
+                    // Initialize the game now that container exists
+                    RetroGame.init();
+
+                    // Exit button
+                    const exitBtn = document.getElementById('exit-aim-trainer-btn');
+                    if (exitBtn) {
+                        exitBtn.addEventListener('click', () => {
+                            RetroGame.running = false;
+                            // Re-render home page to restore the preview
+                            navigateTo('home');
+                        });
+                    }
+                });
+            }
+        }
+
+        // Mobile dropdown toggle (tap-friendly)
+        document.querySelectorAll('.nav-dropdown > a').forEach(dropdownToggle => {
+            dropdownToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                const parent = dropdownToggle.parentElement;
+                // Close other dropdowns
+                document.querySelectorAll('.nav-dropdown.open').forEach(other => {
+                    if (other !== parent) other.classList.remove('open');
+                });
+                parent.classList.toggle('open');
+            });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.nav-dropdown')) {
+                document.querySelectorAll('.nav-dropdown.open').forEach(d => {
+                    d.classList.remove('open');
+                });
+            }
+        });
     }
-}
 
 function attachWeaponClick(weapons) {
     const selector = '.weapon-card';
