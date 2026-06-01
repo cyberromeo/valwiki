@@ -3,23 +3,21 @@
    ========================================= */
 
 :root {
-    /* Colors */
-    --ui-black: #000000;
-    --ui-white: #FFFFFF;
-    --ui-red: #D71920;
-    /* Signature Theme Red */
-    --ui-gray-100: #1a1a1a;
-    --ui-gray-200: #333333;
-    --ui-gray-500: #888888;
-    --ui-gray-800: #eeeeee;
+    /* Colors - VALORANT Design Language */
+    --ui-black: #1B1D1F;
+    --ui-white: #F1F1F1;
+    --ui-red: #D71921;
+    --ui-gray-100: #222426;
+    --ui-gray-200: #333537;
+    --ui-gray-500: #888A8C;
+    --ui-gray-800: #E8E8E8;
 
     /* Fonts */
     --font-dot: 'Doto', monospace;
-    /* Dot matrix font */
     --font-sans: 'Inter', sans-serif;
 
     /* Borders & Lines */
-    --border-color: #333333;
+    --border-color: rgba(241, 241, 241, 0.12);
     --border-width: 1px;
 
     /* Spacing */
@@ -186,13 +184,13 @@ h1, h2, h3, h4, h5, h6 {
     left: var(--space-sm);
     right: var(--space-sm);
     z-index: 200;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(27, 29, 31, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(241, 241, 241, 0.08);
     border-radius: 12px;
     padding: var(--space-sm) var(--space-md);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
     transition: border-radius 0.3s ease;
 }
 
@@ -358,7 +356,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero-content {
-    background: rgba(0, 0, 0, 0.35);
+    background: rgba(27, 29, 31, 0.65);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -468,7 +466,7 @@ canvas#game-canvas {
     max-height: 45vh;
     object-fit: contain;
     z-index: 5;
-    background: #000000;
+    background: var(--ui-black);
     border: 2px solid var(--ui-gray-200);
     box-shadow: 0 0 20px rgba(215, 25, 32, 0.1);
 }
@@ -856,7 +854,7 @@ canvas#game-canvas {
 }
 
 .modal-content {
-    background: rgba(10, 10, 12, 0.85);
+    background: rgba(27, 29, 31, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     width: 100%;
