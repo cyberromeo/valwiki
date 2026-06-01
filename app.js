@@ -552,17 +552,17 @@ function renderHomePage(agents) {
     const featured = agents.slice(0, 6);
 
     const categories = [
-        { emoji: '🗺️', name: 'MAPS', page: 'maps' },
-        { emoji: '🔫', name: 'WEAPONS', page: 'weapons' },
-        { emoji: '🃏', name: 'CARDS', page: 'cards' },
-        { emoji: '🔫', name: 'BUDDIES', page: 'buddies' },
-        { emoji: '🎨', name: 'SPRAYS', page: 'sprays' },
-        { emoji: '🏷️', name: 'TITLES', page: 'titles' },
-        { emoji: '💰', name: 'CURRENCY', page: 'currency' },
-        { emoji: '📅', name: 'SEASONS', page: 'seasons' },
-        { emoji: '🏆', name: 'RANKS', page: 'ranks' },
-        { emoji: 'ℹ️', name: 'ABOUT', page: 'about' },
-    ];
+            { icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6V16L12 22L23 16V6L12 0L1 6Z"/><path d="M12 22V12"/><path d="M23 6L12 12L1 6"/></svg>', name: 'MAPS', page: 'maps' },
+            { icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12L7 2L12 12"/><path d="M12 12L17 2L22 12"/><circle cx="12" cy="18" r="4"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="18" x2="14" y2="18"/></svg>', name: 'WEAPONS', page: 'weapons' },
+            { icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="12" cy="12" r="3"/><rect x="2" y="4" width="6" height="16" rx="1"/></svg>', name: 'CARDS', page: 'cards' },
+            { icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M12 13L12 22"/><path d="M5 22L7 13M19 22L17 13"/></svg>', name: 'BUDDIES', page: 'buddies' },
+            { icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>', name: 'SPRAYS', page: 'sprays' },
+            { icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41L12.59 21.41C12.21 21.79 11.66 22 11.09 22H6L2 18V12.91C2 12.35 2.22 11.8 2.59 11.41L10.59 3.41C11.37 2.63 12.63 2.63 13.41 3.41L20.59 10.59C21.37 11.37 21.37 12.63 20.59 13.41Z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>', name: 'TITLES', page: 'titles' },
+            { icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 6V12L16 14"/><path d="M9 2L12 6L15 2"/><path d="M9 22L12 18L15 22"/></svg>', name: 'CURRENCY', page: 'currency' },
+            { icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>', name: 'SEASONS', page: 'seasons' },
+            { icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9L12 3L18 9"/><path d="M12 3V15"/><path d="M20 21H4"/><path d="M16 21V17"/><path d="M8 21V19"/></svg>', name: 'RANKS', page: 'ranks' },
+            { icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>', name: 'ABOUT', page: 'about' },
+        ];
 
     return `
         <div class="landing-container">
@@ -588,11 +588,11 @@ function renderHomePage(agents) {
                 </div>
                 <div class="category-grid">
                     ${categories.map(cat => `
-                        <div class="category-card" data-page="${cat.page}">
-                            <span class="category-emoji">${cat.emoji}</span>
-                            <span class="category-name">${cat.name}</span>
-                        </div>
-                    `).join('')}
+                                            <div class="category-card" data-page="${cat.page}">
+                                                <span class="category-icon">${cat.icon}</span>
+                                                <span class="category-name">${cat.name}</span>
+                                            </div>
+                                        `).join('')}
                 </div>
             </section>
 
@@ -626,7 +626,7 @@ function renderHomePage(agents) {
                 <div class="aim-trainer-preview" id="aim-trainer-preview">
                     <p class="aim-trainer-desc">SHOOT THE BLIND — DESTROY THE LEERS BEFORE THEY ESCAPE</p>
                     <p class="aim-trainer-highscore">HIGH SCORE: ${RetroGame.highScore}</p>
-                    <button class="cta-btn primary" id="play-aim-trainer-btn">▶ PLAY AIM TRAINER</button>
+                    <button class="cta-btn primary" id="play-aim-trainer-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:6px"><polygon points="5,3 19,12 5,21"/></svg>PLAY AIM TRAINER</button>
                 </div>
             </section>
         </div>
@@ -1191,7 +1191,7 @@ function attachEventListeners(page) {
                         </div>
                         <div id="game-container-root" class="game-container"></div>
                         <div style="text-align: center; margin-top: 1rem;">
-                            <button class="cta-btn" id="exit-aim-trainer-btn" style="font-size: 0.8rem;">✕ EXIT TRAINER</button>
+                            <button class="cta-btn" id="exit-aim-trainer-btn" style="font-size: 0.8rem;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="vertical-align:middle;margin-right:4px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>EXIT TRAINER</button>
                         </div>
                     `;
                     // Initialize the game now that container exists

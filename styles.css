@@ -353,11 +353,17 @@ h1, h2, h3, h4, h5, h6 {
     justify-content: center;
     text-align: center;
     overflow: hidden;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     padding: var(--space-lg) var(--space-md);
 }
 
 .hero-content {
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: var(--space-lg) var(--space-xl);
     position: relative;
     z-index: 2;
     display: flex;
@@ -396,10 +402,12 @@ h1, h2, h3, h4, h5, h6 {
     max-height: 55vh;
     overflow: hidden;
     transition: max-height 0.4s ease;
-    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     margin: var(--space-md) 0;
-    background: var(--ui-black);
 }
 
 .game-section.collapsed {
@@ -411,7 +419,7 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    background: var(--ui-gray-100);
+    background: rgba(255, 255, 255, 0.05);
     border: none;
     color: var(--ui-gray-800);
     font-family: var(--font-dot);
@@ -425,7 +433,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .game-section-toggle:hover {
-    background: var(--ui-gray-200);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .game-section-toggle::after {
@@ -591,22 +599,26 @@ canvas#game-canvas {
 }
 
 .new-agent-card {
-    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-left: 3px solid transparent;
+    border-radius: 8px;
     padding: var(--space-sm);
     text-align: center;
     cursor: pointer;
-    transition: transform 0.2s ease, background 0.2s ease, border-left-color 0.2s ease;
-    background: var(--ui-black);
+    transition: transform 0.2s ease, background 0.2s ease, border-left-color 0.2s ease, box-shadow 0.2s ease;
     min-height: 44px;
 }
 
 .new-agent-card:hover,
 .new-agent-card.active {
-    background: var(--ui-gray-100);
+    background: rgba(255, 255, 255, 0.08);
     border-color: var(--ui-white);
     border-left-color: var(--ui-red);
     transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(215, 25, 32, 0.15);
 }
 
 .ag-img img {
@@ -632,15 +644,17 @@ canvas#game-canvas {
    BUTTONS (Mobile-first)
    ========================================= */
 .cta-btn {
-    border: 1px solid var(--ui-white);
-    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     color: var(--ui-white);
     padding: 14px 28px;
     font-family: var(--font-dot);
     font-size: 0.9rem;
     cursor: pointer;
     border-radius: 50px;
-    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     text-transform: uppercase;
     min-height: 44px;
     display: inline-flex;
@@ -652,17 +666,21 @@ canvas#game-canvas {
     background: var(--ui-red);
     border-color: var(--ui-red);
     color: var(--ui-white);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 .cta-btn:hover {
     background: var(--ui-white);
     color: var(--ui-black);
     border-color: var(--ui-white);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
 }
 
 .cta-btn.primary:hover {
     background: var(--ui-white);
-    color: var(--ui-black);
+    color: var(--ui-red);
+    box-shadow: 0 0 20px rgba(215, 25, 32, 0.4);
 }
 
 /* =========================================
@@ -729,21 +747,26 @@ canvas#game-canvas {
    CARDS (Mobile-first - no grayscale, border-left accent)
    ========================================= */
 .card {
-    background: var(--ui-gray-100);
-    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-left: 3px solid transparent;
+    border-radius: 8px;
     padding: var(--space-sm);
     position: relative;
     overflow: hidden;
-    transition: border-left-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    transition: border-left-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
     min-height: 44px;
 }
 
 .card:hover,
 .card.active {
+    background: rgba(255, 255, 255, 0.08);
     border-color: var(--ui-red);
     border-left-color: var(--ui-red);
     transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(215, 25, 32, 0.15);
 }
 
 .card img {
@@ -769,21 +792,25 @@ canvas#game-canvas {
    ========================================= */
 .category-card,
 .database-category {
-    background: var(--ui-gray-100);
-    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-left: 4px solid var(--ui-red);
+    border-radius: 8px;
     padding: var(--space-md);
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .category-card:hover,
 .database-category:hover {
-    background: var(--ui-gray-200);
+    background: rgba(255, 255, 255, 0.1);
     border-color: var(--ui-red);
     transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(215, 25, 32, 0.2);
 }
 
 .category-card::before,
@@ -829,11 +856,13 @@ canvas#game-canvas {
 }
 
 .modal-content {
-    background: var(--ui-black);
+    background: rgba(10, 10, 12, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     width: 100%;
     max-width: 1000px;
     max-height: 95vh;
-    border: 1px solid var(--ui-gray-200);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
     overflow-y: auto;
     display: flex;
@@ -1492,10 +1521,24 @@ canvas#game-canvas {
     gap: var(--space-sm);
 }
 
-.category-emoji {
-    font-size: 1.8rem;
-    display: block;
+.category-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
     margin-bottom: var(--space-xs);
+    color: var(--ui-red);
+    transition: color 0.2s;
+}
+
+.category-card:hover .category-icon {
+    color: var(--ui-white);
+}
+
+.category-icon svg {
+    width: 20px;
+    height: 20px;
 }
 
 .category-name {
@@ -1510,8 +1553,10 @@ canvas#game-canvas {
    AIM TRAINER SECTION
    ========================================= */
 .aim-trainer-section {
-    background: linear-gradient(to bottom, rgba(0,0,0,0.8), var(--ui-black));
-    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     padding: var(--space-lg);
     text-align: center;
